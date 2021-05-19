@@ -6,7 +6,9 @@ import java.io.*;
 
 public class MyRunnable implements Runnable {
   public String directory;
-  //public volatile String biggest = "1\t\t0.00";
+  public volatile static String biggest = "1\t\t0.00";
+  public volatile static int numDone = 0;
+  public volatile static String biggestPlace = "somewhere";
 
   public MyRunnable(String dir) {
     directory = dir;
@@ -36,7 +38,15 @@ public class MyRunnable implements Runnable {
  	    System.out.println ("Uh oh: " + exe);
  	  }
 
-    System.out.println (topAccount);
+    if (getValue(topAccount) > getValue(biggest)){ //checking if the biggest account in this thread's file is greater than the biggest found so far
+      biggest = topAccount;
+      biggestPlace = directory;
+    }
+    numDone++;
+    if (numDone == 10){ //if this is the last thread alive, print the biggest account
+      System.out.println ("Account with the greatest balance: " + biggest);
+      System.out.println ("This account can be found in in: " + biggestPlace);
+    }
  	}
 
  	public double getValue(String lineOfText){
